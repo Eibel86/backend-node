@@ -15,23 +15,23 @@ const DBinit = async () => {
                 await queryDB(`
                         CREATE TABLE IF NOT EXISTS users (
                                 user_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-                                nombre VARCHAR(120) NOT NULL,
+                                name VARCHAR(120) NOT NULL,
                                 email VARCHAR(120) UNIQUE NOT NULL,
                                 password VARCHAR(200) NOT NULL,
                                 direccion VARCHAR(200),
-                                telefono VARCHAR(120),
+                                telefono VARCHAR(9),
                                 role VARCHAR(60) 
                         );
 
                         CREATE TABLE IF NOT EXISTS categoria_pdto (
                                 cat_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-                                name VARCHAR(120) NOT NULL
+                                categoria_name VARCHAR(120) NOT NULL
                         );
 
                         CREATE TABLE IF NOT EXISTS plantillas (
                                 planti_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-                                cat_pdto INTEGER REFERENCES categoria_pdto(cat_id) ON DELETE CASCADE,
-                                name VARCHAR(120) NOT NULL,
+                                cat_id INTEGER REFERENCES categoria_pdto(cat_id) ON DELETE CASCADE,
+                                plantilla_name VARCHAR(120) NOT NULL,
                                 tag VARCHAR(120) NOT NULL,
                                 plantilla_url VARCHAR(300) NOT NULL,
                                 tipo_plantilla VARCHAR(120) NOT NULL
@@ -39,8 +39,8 @@ const DBinit = async () => {
 
                         CREATE TABLE IF NOT EXISTS productos (
                                 pdto_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-                                cat_pdto INTEGER REFERENCES categoria_pdto(cat_id) ON DELETE CASCADE,
-                                name VARCHAR(120) NOT NULL,
+                                cat_id INTEGER REFERENCES categoria_pdto(cat_id) ON DELETE CASCADE,
+                                producto_name VARCHAR(120) NOT NULL,
                                 dimension VARCHAR(120) NOT NULL,
                                 descripcion VARCHAR(600),
                                 color VARCHAR(120) NOT NULL,
@@ -49,7 +49,7 @@ const DBinit = async () => {
 
                         CREATE TABLE IF NOT EXISTS promocion (
                                 promo_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-                                name VARCHAR(120) NOT NULL,
+                                promocion_name VARCHAR(120) NOT NULL,
                                 descripcion VARCHAR(600),
                                 descuento NUMERIC(10, 2) NOT NULL
                         );
@@ -78,19 +78,19 @@ const DBinit = async () => {
                 const password2 = await bcrypt.hash("Admin123", 10);
                 // 4. Insertar datos ficticios
                 //USERS
-                await queryDB(`INSERT INTO users(nombre, email, password,direccion, telefono, role)
+                await queryDB(`INSERT INTO users(name, email, password,direccion, telefono, role)
                        VALUES
-                ('Ana', 'ana@email.com', $1, 'calle falsa 1', '654789654', 'user'),
-                ('Abel', 'abel@email.com', $2, 'calle ola 3', '654321123', 'admin')`,
+                ('Ana', 'ana@gmail.com', $1, 'calle falsa 1', '654789654', 'user'),
+                ('Abel', 'abel@gmail.com', $2, 'calle ola 3', '654321123', 'admin')`,
                         [password1, password2]
                 );
                 //CATEGORIA_PDTO
-                await queryDB(`INSERT INTO categoria_pdto(name) 
+                await queryDB(`INSERT INTO categoria_pdto(categoria_name)
                         VALUES
                         ('Taza'),('Bidon'),('Camiseta')
                 `);
                 //PLANTILLAS
-                await queryDB(`INSERT INTO plantillas(name,cat_pdto,tag,plantilla_url,tipo_plantilla) 
+                await queryDB(`INSERT INTO plantillas(plantilla_name,cat_id,tag,plantilla_url,tipo_plantilla) 
                         VALUES
                         ('CorazonHuesos',1,'perro mascota', 'https://example.com/hueso.jpg', '200mmX90mm'),
                         ('HuellaHuesos',1,'perro mascota', 'https://example.com/huella.jpg', '200mmX90mm'),
@@ -99,7 +99,7 @@ const DBinit = async () => {
                         ('CorazonHuesos',2,'perro mascota', 'https://example.com/hueso.jpg', '200mmX150mm')
                 `);
                 //PRODUCTOS
-                await queryDB(`INSERT INTO productos(name,cat_pdto,dimension,descripcion,color,precio) 
+                await queryDB(`INSERT INTO productos(producto_name,cat_id,dimension,descripcion,color,precio) 
                         VALUES
                         ('Taza blanca brillo AA',1,'24 x 9,5 cm', 'Taza para sublimación de alta calidad AA con recubrimiento ORCA acabado brillo','Blanca Brillo',12.00),
                         ('Taza blanca mate AA',1,'24 x 9,5 cm', 'Taza para sublimación de alta calidad AA con recubrimiento ORCA acabado mate','Blanca Mate',12.00),
@@ -115,7 +115,7 @@ const DBinit = async () => {
                         ('Bidones de aluminio',2,'Ø6,5 x 17,5', 'Botellas de agua reutilizables con tapón de rosca y mosquetón, personalizables por sublimación.', 'Blanco',15.00)
                 `);
                 //PROMOCION
-                await queryDB(`INSERT INTO promocion(name,descripcion,descuento) 
+                await queryDB(`INSERT INTO promocion(promocion_name,descripcion,descuento) 
                         VALUES
                         ('Promoción 3 tazas', 'Por la compra de tres tazas descuento del 10%', 0.90),
                         ('Promoción 6 tazas', 'Por la compra de seis tazas descuento del 15%', 0.85),

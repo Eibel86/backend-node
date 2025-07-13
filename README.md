@@ -12,3 +12,17 @@
 
 ##RAMAS MERGE A DEVELOP
     basedatos
+
+
+##.env
+PORT = 5000
+
+FRONT_URL=http://localhost:5173
+
+DB_USER=postgres
+DB_PASSWORD=123456
+DB_HOST_NAME=localhost
+DB_PORT=5432
+DB_NAME=plantillas
+
+PRIVATE_KEY_JWB= 1234

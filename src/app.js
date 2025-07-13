@@ -3,7 +3,7 @@ require('dotenv').config()
 const app = express();
 const cors = require("cors");
 const path = require("path");
-const { authRoutes, userRoutes } = require("./routes");
+const { userRoutes, productRoutes } = require("./routes");
 
 
 
@@ -31,9 +31,9 @@ app.use(cors({
 
 
 
-app.use("/api/v1/auth", authRoutes);
-
 app.use("/api/v1/user", userRoutes);
+
+app.use("/api/v1/product", productRoutes);
 
 // app.use("/admin", adminRoutes);
 

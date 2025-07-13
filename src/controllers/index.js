@@ -1,41 +1,44 @@
 const {
     registry,
     login
-} = require("./authControllers")
+} = require("./userControllers")
 
 const {
     getAllPdto,
+    getPdtoByName,
+    getPdtosByCatId,
     getPdtoById,
-    getPdtoByCategory,
-    getAllTemplate,
-    getTemplateById,
-    getTemplateByCategory,
     createPdto,
     updatePdtoById,
     deletePdtoById,
+
+    getAllTemplate,
+    getTemplateById,
+    getTemplateByCategory,
     createTemplate,
     updateTemplateById,
     deleteTemplateById
-} = require("./userControllers")
+} = require("./productControllers")
 
 
 module.exports = {
-    //authControllers
+    //userControllers
     login,
     registry,
 
-    //userControllers
+    //productControllers
     getAllPdto,
+    getPdtoByName,
+    getPdtosByCatId,
     getPdtoById,
-    getPdtoByCategory,
-
-    getAllTemplate,
-    getTemplateById,
-    getTemplateByCategory,
-
     createPdto,
     updatePdtoById,
     deletePdtoById,
+
+    //templateControllers
+    getAllTemplate,
+    getTemplateById,
+    getTemplateByCategory,
 
     createTemplate,
     updateTemplateById,
