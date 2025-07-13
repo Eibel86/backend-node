@@ -120,56 +120,56 @@ const createPdto = async (req, res) => {
     // res.status(200).json({
     //     msg: 'Entrando a Crear producto'
     // })
-    // const { //Desestructura los datos recibidos del cuerpo-body de la solicitud
-    //     categoria_name,
-    //     producto_name,
-    //     dimension,
-    //     descripcion,
-    //     color,
-    //     precio,
-    // } = req.body;
+    const { //Desestructura los datos recibidos del cuerpo-body de la solicitud
+        categoria_name,
+        producto_name,
+        dimension,
+        descripcion,
+        color,
+        precio,
+    } = req.body;
 
-    // // const image_url = req.file.path;
+    // const image_url = req.file.path;
 
-    // try {
-    //     // Verificar si el producto ya existe
-    //     const existingPdto = await findByPdtoOne(producto_name);
-    //     if (existingPdto) {
-    //         return res.status(409).json({
-    //             ok: false,
-    //             token: req.renewedToken,
-    //             msg: 'El producto ya existe', //404 CONFLICT
-    //         });
-    //     }
+    try {
+        // Verificar si el producto ya existe
+        const existingPdto = await findByPdtoOne(producto_name);
+        if (existingPdto) {
+            return res.status(409).json({
+                ok: false,
+                token: req.renewedToken,
+                msg: 'El producto ya existe', //404 CONFLICT
+            });
+        }
 
-    //     // Insertar director si no existe y obtener su id
-    //     const cat_id = await categoryModel.insertCategoryIfNotExists(categoria_name); //Busca la categoria por nombre y lo inserta si no lo encuentra
+        // Insertar director si no existe y obtener su id
+        const cat_id = await categoryModel.insertCategoryIfNotExists(categoria_name); //Busca la categoria por nombre y lo inserta si no lo encuentra
 
-    //     // Insertar la película. Crea el objeto con todos los datos. 
-    //     const newPdto = await productModel.insertPdto({
-    //         cat_id,
-    //         producto_name,
-    //         dimension,
-    //         descripcion,
-    //         color,
-    //         precio,
-    //     });
+        // Insertar la película. Crea el objeto con todos los datos. 
+        const newPdto = await productModel.insertPdto({
+            cat_id,
+            producto_name,
+            dimension,
+            descripcion,
+            color,
+            precio,
+        });
 
-    //     //Devuelve una respuesta exitosa con los datos de la peli recién creada
-    //     return res.status(201).json({ //201 CREATED 
-    //         ok: true,
-    //         token: req.renewedToken,
-    //         msg: 'Producto creado con exito',
-    //         film: newPdto,
-    //     });
+        //Devuelve una respuesta exitosa con los datos de la peli recién creada
+        return res.status(201).json({ //201 CREATED 
+            ok: true,
+            token: req.renewedToken,
+            msg: 'Producto creado con exito',
+            film: newPdto,
+        });
 
-    // } catch (error) {
-    //     console.error('Error en createPdto:', error);
-    //     return res.status(500).json({ //500 INTERNAL SERVER ERROR
-    //         ok: false,
-    //         msg: 'Error interno del servidor',
-    //     });
-    // }
+    } catch (error) {
+        console.error('Error en createPdto:', error);
+        return res.status(500).json({ //500 INTERNAL SERVER ERROR
+            ok: false,
+            msg: 'Error interno del servidor',
+        });
+    }
 };
 
 //updatePdtoById : Editar producto por id.

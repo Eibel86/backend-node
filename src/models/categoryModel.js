@@ -4,7 +4,7 @@ const queries = require('../queries/productQueries');
 
 
 const findCategoryByName = async (name) => {
-    const result = await queryDB(queries.findCategoriaByName, [name]);
+    const result = await queryDB(queries.findCategoryByName, [name]);
     return result.rows[0];
 };
 

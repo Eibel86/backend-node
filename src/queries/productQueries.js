@@ -48,6 +48,17 @@ const productQueries = {
         ($1, $2, $3, $4, $5, $6)
         RETURNING *`,
 
+    //Consulta para buscar el id de un director por su nombre
+    findCategoryByName:
+        `SELECT cat_id 
+        FROM categoria_pdto
+        WHERE categoria_name = $1`,
+
+    //Consulta para insertar una categoria en la bbdd. 
+    insertCategory:
+        `INSERT INTO categoria_pdto (categoria_name) 
+        VALUES ($1) 
+        RETURNING cat_id`,
 
     ///////////////////////////////////////////////////////////////////////////
 
