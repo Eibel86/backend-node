@@ -56,27 +56,28 @@ const insertPdto = async (pdtoData) => {
     return result.rows[0]; //Devuelve la primera fila del resultado (el producto recién insertada)
 };
 
-// // FUNCION: Actualizar película por id
-// const updateById = async ({
-//     film_id, director_id,
-//     genre_id, full_title,
-//     image_url, release_date,
-//     duration, synopsis
-//   }) => {
-//     const result = await queryDB(queries.updateById, [
-//       director_id, genre_id,
-//       full_title, image_url,
-//       release_date, duration,
-//       synopsis, film_id // al final porque es WHERE film_id = $8
-//     ]);
-//     return result.rows[0] || null;
-//   };
+// FUNCION: Actualizar producto por id
+const updateProductById = async ({
+    pdto_id,
+    cat_id,
+    producto_name,
+    dimension,
+    descripcion,
+    color,
+    precio,
+}) => {
+    const result = await queryDB(queries.updateById, [
+        cat_id, producto_name, dimension,
+        descripcion, color, precio, pdto_id // al final porque es WHERE film_id = $7
+    ]);
+    return result.rows[0] || null;
+};
 
-//   // FUNCIÓN: Borrar por id
-// const deleteById = async (film_id) => {
-//   const result = await queryDB(queries.deleteById, [film_id]);
-//   return result.rows[0];
-// };
+//FUNCIÓN: Borrar Producto por id
+const deleteProductById = async (pdto_id) => {
+    const result = await queryDB(queries.deleteById, [pdto_id]);
+    return result.rows[0];
+};
 
 // EXPORTS
 module.exports = {
@@ -85,8 +86,7 @@ module.exports = {
     findPdtoById,
     findAllPdtosByCatId,
     findByPdtoOne,
-    insertPdto
-    // updateById,
-    // deleteById
-    // findByTitleOne,
+    insertPdto,
+    updateProductById,
+    deleteProductById
 };

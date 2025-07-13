@@ -60,63 +60,35 @@ const productQueries = {
         VALUES ($1) 
         RETURNING cat_id`,
 
-    ///////////////////////////////////////////////////////////////////////////
-
-
-    // //Consulta para insertar una nueva peli en la bbdd. Devuelve la peli insertada. 
-    // insertFilm:
-    //     `INSERT INTO films 
-    //     (full_title, director_id, genre_id, image_url, release_date, duration, synopsis)
-    //     VALUES 
-    //     ($1, $2, $3, $4, $5, $6, $7)
-    //     RETURNING *`,
-
     // //Consulta para buscar el id de un director por su nombre
-    // findDirectorByName:
-    //     `SELECT director_id 
-    //     FROM directors 
-    //     WHERE name = $1`,
+    findCategoryByName:
+        `SELECT cat_id 
+        FROM categoria_pdto 
+        WHERE categoria_name = $1`,
 
-    // //Consulta para insertar un nuevo director y devolver su id
-    // insertDirector:
-    //     `INSERT INTO directors (name) 
-    //     VALUES ($1) 
-    //     RETURNING director_id`,
+    //Consulta para editar una película
+    updateById: `
+        UPDATE productos
+        SET 
+            cat_id = $1,
+            producto_name = $2,
+            dimension = $3,
+            descripcion = $4,
+            color = $5,
+            precio = $6
+        WHERE pdto_id = $7
+        RETURNING *;`,
+    //IMPORTANTE EN EL CASO DE QUERER AÑADIR UNA IMAGEN HAY QUE INCLUIR LO SIGUIENTE
+    //         image_url = COALESCE($4::TEXT, image_url), 
 
-    // //Consulta para buscar el id de un género por su nombre
-    // findGenreByName:
-    //     `SELECT genre_id 
-    //     FROM genres 
-    //     WHERE name = $1`,
 
-    // //Consulta para insertar un nuevo género y devolver su id
-    // insertGenre:
-    //     `INSERT INTO genres (name) 
-    //     VALUES ($1) 
-    //     RETURNING genre_id`,
+    deleteById: `
+        DELETE FROM productos 
+        WHERE pdto_id = $1 
+        RETURNING *;`,
 
-    // //Consulta para editar una película
-    // updateById: `
-    //     UPDATE films
-    //     SET 
-    //         director_id = $1,
-    //         genre_id = $2,
-    //         full_title = $3,
-    //         image_url = COALESCE($4::TEXT, image_url),
-    //         release_date = $5,
-    //         duration = $6,
-    //         synopsis = $7
-    //     WHERE film_id = $8
-    //     RETURNING *;`,
-
-    // deleteById: `
-    //     DELETE FROM films 
-    //     WHERE film_id = $1 
-    //     RETURNING *;`,
+    ///////////////////////////////////////////////////////////////////////////
 };
-
-
-
 
 // EXPORTS
 module.exports = productQueries;

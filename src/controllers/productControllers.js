@@ -1,7 +1,16 @@
 //CONTROLADORES DE PRODUCTO Y PLANTILLAS//
 const productModel = require("../models/productModel")
 const categoryModel = require("../models/categoryModel")
-const { getAll, findAllPdtosByName, findAllPdtosByCatId, findPdtoById, findByPdtoOne } = require("../models/productModel");
+const {
+    getAll,
+    findAllPdtosByName,
+    findAllPdtosByCatId,
+    findPdtoById,
+    findByPdtoOne,
+    updateProductById,
+    deleteProductById
+} = require("../models/productModel");
+
 
 //////////////CONTROLADOR DE PRODUCTOS////////////////////////
 //getAllPdto : Todos los productos.
@@ -114,12 +123,10 @@ const getPdtoById = async (req, res) => {
         });
     }
 };
-///OK HASTA AKI//
+
 //createPdto : Crear producto.
 const createPdto = async (req, res) => {
-    // res.status(200).json({
-    //     msg: 'Entrando a Crear producto'
-    // })
+
     const { //Desestructura los datos recibidos del cuerpo-body de la solicitud
         categoria_name,
         producto_name,
@@ -171,18 +178,110 @@ const createPdto = async (req, res) => {
         });
     }
 };
-
+///OK HASTA AKI//
 //updatePdtoById : Editar producto por id.
 const updatePdtoById = async (req, res) => {
-    res.status(200).json({
-        msg: 'Entrando a Editar producto por id'
-    })
+    // res.status(200).json({
+    //     msg: 'Entrando a Editar producto por id'
+    // })
+    try {
+        const { //Extrae del body los datos que pueden actualizarse
+            categoria_name,
+            producto_name,
+            dimension,
+            descripcion,
+            color,
+            precio,
+        } = req.body;
+
+        //const image_url = req.file ? req.file.path : null;
+
+        const cat_id = await categoryModel.insertCategoryIfNotExists(categoria_name);
+        const { id: idParam } = req.params;
+        const pdto_id = Number(idParam);
+        if (Number.isNaN(pdto_id)) {
+            return res.status(400).json({
+                ok: false,
+                error: "ID inválido o ausencia del parámetro en la URL"
+            });
+        }
+        console.log("ID a actualizar:", pdto_id);
+        const updatedPdto = await updateProductById({// Llama a la función que actualiza el pdto en la BBDD pasando todos los datos
+            pdto_id,
+            cat_id,
+            producto_name,
+            dimension,
+            descripcion,
+            color,
+            precio,
+        });
+
+        if (!updatedPdto) { // Si no se ha actualiza ninguna pdto:
+            return res.status(404).json({
+                ok: false,
+                token: req.renewedToken,
+                error: "Producto no encontrada o no actualizada",
+            });
+        }
+
+        res.status(200).json({
+            ok: true,
+            data: updatedPdto,
+        });
+
+    } catch (error) {
+        console.error("Error en updatePdtoById:", error);
+        res.status(500).json({
+            ok: false,
+            error: "Error interno al actualizar el producto.",
+        });
+    }
 };
+
+
+
 //deletePdtoById : Borrar producto por id.
 const deletePdtoById = async (req, res) => {
-    res.status(200).json({
-        msg: 'Entrando a Eliminar pdto por id'
-    })
+    // res.status(200).json({
+    //     msg: 'Entrando a Eliminar pdto por id'
+    // })
+    //Extrae el parámetro de la URL (req.params)
+    const { id: idParam } = req.params;
+    const pdto_id = Number(idParam);
+    if (Number.isNaN(pdto_id)) {
+        return res.status(400).json({
+            ok: false,
+            error: "ID inválido o ausencia del parámetro en la URL"
+        });
+    }
+
+    try {
+        // Llama a la función del modelo que elimina el producto por su ID
+        const deleted = await deleteProductById(pdto_id);
+
+        if (!deleted) { //Si no encuentra el producto
+            return res.status(404).json({
+                ok: false,
+                token: req.renewedToken,
+                msg: 'Producto no encontrado',
+            });
+        }
+
+        return res.status(200).json({
+            ok: true,
+            token: req.renewedToken,
+            msg: 'Producto eliminado correctamente',
+        });
+
+    } catch (error) {
+        console.error('Error al eliminar el producto:', error);
+        return res.status(500).json({
+            ok: false,
+            token: req.renewedToken,
+            msg: 'Error interno al eliminar el producto',
+        });
+    }
+
 };
 
 
